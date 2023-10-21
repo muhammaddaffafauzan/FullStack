@@ -56,3 +56,20 @@ export const deleteUser = async(req, res) =>{
         console.log(error.message);
     }
 }
+// auth
+// export const Register = async(req, res) => {
+//     const { name, email, gender, password, confPassword } = req.body;
+//     if(password !== confPassword) return res.status(400).json({msg: "password dan confirm password tidak cocok"});
+//     const salt = await bcrypt.gensalt();
+//     const hashPassword = await bcrypt.hash(password, salt);
+//     try {
+//        await User.create({
+//           name: name,
+//           email: email,
+//           gender: gender,
+//           password: hashPassword
+//        }); 
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
