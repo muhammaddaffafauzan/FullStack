@@ -6,7 +6,14 @@ const users = {
      usersData: [],
     },
     getters:{
-      getUsers: (state) => state.usersData
+      getUsers: (state) => state.usersData,
+      getUsersById: (state) => (users_id) => {
+        console.log("fetching single users by id:", users_id);
+        console.log("usersData:", state.usersData);
+        const user = state.usersData;
+        console.log("user:", user);
+        return user;
+      }
     },
     actions:{
         async fetchUsers({ commit }) {
@@ -14,6 +21,16 @@ const users = {
               const url = 'http://localhost:5000/users';
               const response =  await axios.get(url);
               commit("SET_USERS", response.data);
+            } catch (error) {
+              alert(error);
+              console.log(error);
+            }
+          },
+          async fetchSingleUsers({ commit }, users_id) {
+            try {
+              const url = `http://localhost:5000/users/${users_id}`;
+              const response =  await axios.get(url);
+              commit("SET_SINGLE_USERS", response.data);
             } catch (error) {
               alert(error);
               console.log(error);
@@ -30,15 +47,16 @@ const users = {
               return false;
             }
           },
-          async updateUsers({ commit }, credentials) {
+          async updateUser({ commit }, { id, name, email, gender }) {
             try {
-              const urlCreate = `http://localhost:5000/users/${id}`;
-              const responseCreate = await axios.patch(urlCreate, credentials);
-
-              commit('SET_UPDATE_USERS', responseCreate.data);
+              const response = await axios.patch(`http://localhost:5000/users/${id}`, {
+                name,
+                email,
+                gender,
+              });
+              commit('SET_UPDATE_USERS', response.data);
             } catch (error) {
-              console.error(error);
-              return false;
+              console.error('Error updating user data:', error);
             }
           },
           async deleteUser({ commit }, usersId) {
@@ -52,6 +70,9 @@ const users = {
     },
     mutations: {
         SET_USERS(state, users) {
+            state.usersData = users;
+          },
+          SET_SINGLE_USERS(state, users) {
             state.usersData = users;
           },
           SET_ADD_USERS(state, users) {
